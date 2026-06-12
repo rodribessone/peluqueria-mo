@@ -1,0 +1,13 @@
+# Dependencias
+node_modules/
+
+# Secretos — NUNCA commitear (usar .env.example como plantilla)
+.env
+
+# Builds
+dist/
+build/
+
+# Sistema
+.DS_Store
+Thumbs.db
