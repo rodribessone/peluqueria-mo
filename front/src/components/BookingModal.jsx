@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     X, Calendar, Clock, User, Check, ChevronRight, ChevronLeft,
-    AlertCircle, Phone, ExternalLink, Sparkles, AlertTriangle, Mail
+    AlertCircle, Phone, ExternalLink, Sparkles, AlertTriangle
 } from 'lucide-react';
 import CalendarReact from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -212,7 +212,7 @@ export default function BookingModal({ service, onClose }) {
     const [date, setDate] = useState(null);
     const [time, setTime] = useState(null);
     const [customDuration, setCustomDuration] = useState(60);
-    const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
+    const [formData, setFormData] = useState({ name: '', phone: '' });
     const [slots, setSlots] = useState([]);
     const [loadingSlots, setLoadingSlots] = useState(false);
     const [submitting, setSubmitting] = useState(false);
@@ -319,7 +319,7 @@ export default function BookingModal({ service, onClose }) {
         const bookingData = {
             clientName: isBlocking ? (formData.name || 'Administración') : formData.name,
             clientPhone: isBlocking ? '0000000000' : formData.phone,
-            clientEmail: isBlocking ? '' : formData.email,
+            clientEmail: '', // sin email — la confirmación va por WhatsApp desde el panel de admin
             service: { ...service, duration: finalDuration },
             dateStr, date, time, endTime,
             status: isBlocking ? 'blocked' : 'confirmed'
@@ -527,20 +527,6 @@ export default function BookingModal({ service, onClose }) {
                                                         className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-rose-500 outline-none transition-all"
                                                         placeholder="Ej: 0412 345 678"
                                                         value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
-                                                </div>
-                                            )}
-                                            {!isBlocking && (
-                                                <div>
-                                                    <label className="block text-sm font-medium text-zinc-700 mb-1">
-                                                        Email <span className="text-zinc-400 font-normal">(opcional — para recibir confirmación)</span>
-                                                    </label>
-                                                    <div className="relative">
-                                                        <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
-                                                        <input type="email"
-                                                            className="w-full pl-10 pr-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-rose-500 outline-none transition-all"
-                                                            placeholder="tu@email.com"
-                                                            value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
-                                                    </div>
                                                 </div>
                                             )}
                                             <div className={`p-4 rounded-xl text-sm space-y-1.5 border ${isBlocking ? 'bg-zinc-50 border-zinc-200 text-zinc-600' : 'bg-rose-50 border-rose-100 text-zinc-600'}`}>

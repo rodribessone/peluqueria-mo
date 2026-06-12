@@ -3,6 +3,7 @@ import { format, startOfWeek, addDays, isSameDay, parseISO, addWeeks, subWeeks }
 import { es } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Clock, Phone, Calendar, X, Lock, AlertTriangle } from 'lucide-react';
 import { API, apiFetch } from '../utils/api';
+import { clientWhatsAppUrl } from '../utils/whatsapp';
 
 export default function WeeklyCalendar({ bookings, onBookingCancelled }) {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -192,10 +193,10 @@ export default function WeeklyCalendar({ bookings, onBookingCancelled }) {
                             ) : (
                                 <div className="pt-2 flex gap-3">
                                     {!isBlocked(selectedBooking) && (
-                                        <a href={`https://wa.me/${selectedBooking.clientPhone.replace(/\D/g, '')}`}
+                                        <a href={clientWhatsAppUrl(selectedBooking)}
                                             target="_blank" rel="noreferrer"
                                             className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl text-center text-sm transition-colors flex items-center justify-center gap-2 shadow-sm">
-                                            <Phone size={16} /> WhatsApp
+                                            <Phone size={16} /> Confirmar por WhatsApp
                                         </a>
                                     )}
                                     <button

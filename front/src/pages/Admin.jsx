@@ -12,6 +12,7 @@ import {
     XCircle, ArrowUpRight, LogOut
 } from 'lucide-react';
 import BookingModal from '../components/BookingModal';
+import { clientWhatsAppUrl } from '../utils/whatsapp';
 
 const EMPTY_SERVICE = { title: '', price: '', priceFrom: false, duration: 60, description: '', image: '', category: 'corte', active: true };
 const SERVICE_CATS = [{ value: 'corte', label: 'Corte' }, { value: 'color', label: 'Color' }, { value: 'tratamiento', label: 'Tratamiento' }, { value: 'peinado', label: 'Peinado' }, { value: 'otro', label: 'Otro' }];
@@ -771,10 +772,18 @@ export default function Admin() {
                                                 {booking.endTime && <span className="text-zinc-400 font-normal">→ {new Date(booking.endTime).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</span>}
                                             </div>
                                             {!isCancelled && (
-                                                <button onClick={() => setCancelConfirm(booking)}
-                                                    className="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 font-medium px-2 py-1 rounded-lg hover:bg-red-50 transition-colors">
-                                                    <X size={11} /> {isBlocked ? 'Liberar' : 'Cancelar'}
-                                                </button>
+                                                <div className="flex items-center gap-1">
+                                                    {!isBlocked && booking.clientPhone && (
+                                                        <a href={clientWhatsAppUrl(booking)} target="_blank" rel="noreferrer"
+                                                            className="flex items-center gap-1 text-[11px] text-green-600 hover:text-green-700 font-medium px-2 py-1 rounded-lg hover:bg-green-50 transition-colors">
+                                                            <Phone size={11} /> Confirmar por WhatsApp
+                                                        </a>
+                                                    )}
+                                                    <button onClick={() => setCancelConfirm(booking)}
+                                                        className="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 font-medium px-2 py-1 rounded-lg hover:bg-red-50 transition-colors">
+                                                        <X size={11} /> {isBlocked ? 'Liberar' : 'Cancelar'}
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     </div>

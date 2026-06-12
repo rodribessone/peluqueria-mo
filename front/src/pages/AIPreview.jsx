@@ -27,7 +27,26 @@ export default function AIPreview() {
     const fileInputRef = useRef(null);
 
     // ── Manejo de foto ────────────────────────────────────────────────────────
-    const processFile = useCallback((file) => {
+    // Reducimos la foto a máx. 1024px y JPEG comprimido antes de mandarla:
+    // la IA no necesita más resolución y el hosting limita el tamaño del
+    // request (Vercel corta en 4.5MB — una foto de celular cruda no entra).
+    const compressImage = (file, maxSize = 1024) => new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.85)); // base64 con prefijo data:...
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('No se pudo procesar la imagen.')); };
+        img.src = url;
+    });
+
+    const processFile = useCallback(async (file) => {
         if (!file || !file.type.startsWith('image/')) {
             setError('Por favor subí una imagen (JPG, PNG, WEBP).');
             return;
@@ -37,13 +56,14 @@ export default function AIPreview() {
             return;
         }
         setError('');
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setPhoto(e.target.result);       // base64 completo (con prefijo data:...)
-            setPhotoPreview(e.target.result);
+        try {
+            const compressed = await compressImage(file);
+            setPhoto(compressed);
+            setPhotoPreview(compressed);
             setPhase('configure');
-        };
-        reader.readAsDataURL(file);
+        } catch {
+            setError('No se pudo procesar la imagen. Probá con otra foto.');
+        }
     }, []);
 
     const handleDrop = useCallback((e) => {
