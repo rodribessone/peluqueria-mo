@@ -22,7 +22,7 @@ export default function Navbar() {
 
                     <Link to="/" className="flex items-center gap-2">
                         <span className="text-2xl font-serif font-bold text-rose-500 tracking-tight">
-                            M&O <span className="text-zinc-400 text-sm font-sans font-medium">Estilistas</span>
+                            <span className="text-zinc-400 text-sm font-sans font-medium">Peluquería</span> M&O
                         </span>
                     </Link>
 

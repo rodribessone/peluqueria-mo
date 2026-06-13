@@ -153,7 +153,7 @@ export default function Store() {
                 <div className="relative max-w-7xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div>
                         <p className="text-rose-400 text-xs font-bold uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
-                            <Sparkles size={12} /> M&O Estilistas
+                            <Sparkles size={12} /> Peluquería M&O
                         </p>
                         <h1 className="text-4xl md:text-5xl font-serif font-black text-white leading-tight mb-4">
                             Tienda de<br />

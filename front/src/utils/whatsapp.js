@@ -22,6 +22,6 @@ export function clientWhatsAppUrl(booking) {
             weekday: 'long', day: 'numeric', month: 'long'
         })
         : '';
-    const msg = `¡Hola ${booking.clientName}! 💇 Te confirmo tu turno de *${booking.serviceName}* en M&O Estilistas:\n\n📅 ${fecha}\n⏰ ${booking.time} hs\n\nSi surge algún problema o necesitás cancelar, avisame por acá con tiempo. ¡Te espero!`;
+    const msg = `¡Hola ${booking.clientName}! 💇 Te confirmo tu turno de *${booking.serviceName}* en Peluquería M&O:\n\n📅 ${fecha}\n⏰ ${booking.time} hs\n\nSi surge algún problema o necesitás cancelar, avisame por acá con tiempo. ¡Te espero!`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 }

@@ -43,7 +43,7 @@ function buildGoogleCalendarUrl({ title, date, startTime, endTime, description }
 // WhatsApp pre-written message
 function buildWhatsAppUrl({ phone, clientName, serviceName, date, startTime, endTime }) {
     const dateStr = new Date(date).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
-    const msg = `¡Hola ${clientName}! 👋 Te confirmamos tu turno en *M&O Estilistas*:\n\n📋 *Servicio:* ${serviceName}\n📅 *Fecha:* ${dateStr}\n⏰ *Horario:* ${startTime} a ${endTime}\n\n¡Te esperamos! 💇`;
+    const msg = `¡Hola ${clientName}! 👋 Te confirmamos tu turno en *Peluquería M&O*:\n\n📋 *Servicio:* ${serviceName}\n📅 *Fecha:* ${dateStr}\n⏰ *Horario:* ${startTime} a ${endTime}\n\n¡Te esperamos! 💇`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 }
 
@@ -68,11 +68,11 @@ function ErrorBanner({ message, onDismiss }) {
 // ── Pantalla de Éxito ─────────────────────────────────────────────────────────
 function SuccessScreen({ booking, onClose }) {
     const gcUrl = buildGoogleCalendarUrl({
-        title: `${booking.serviceName} — M&O Estilistas`,
+        title: `${booking.serviceName} — Peluquería M&O`,
         date: booking.date,
         startTime: booking.time,
         endTime: booking.endTime,
-        description: `Turno reservado en M&O Estilistas para ${booking.clientName}.`,
+        description: `Turno reservado en Peluquería M&O para ${booking.clientName}.`,
     });
     const waUrl = buildWhatsAppUrl({
         phone: booking.salonWhatsapp || '5492337403819',
@@ -103,7 +103,7 @@ function SuccessScreen({ booking, onClose }) {
             </motion.div>
 
             <h2 className="text-2xl font-serif font-black text-zinc-800 mb-1">¡Turno Confirmado!</h2>
-            <p className="text-zinc-500 text-sm mb-6">Te esperamos en M&O Estilistas.</p>
+            <p className="text-zinc-500 text-sm mb-6">Te esperamos en Peluquería M&O.</p>
 
             {/* Tarjeta de resumen */}
             <div className="w-full bg-rose-50 border border-rose-100 rounded-2xl p-5 text-left space-y-3 mb-6">

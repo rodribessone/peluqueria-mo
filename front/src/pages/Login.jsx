@@ -44,7 +44,7 @@ export default function Login() {
                     <div className="w-16 h-16 bg-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg rotate-3">
                         <Scissors size={28} className="text-white" />
                     </div>
-                    <h1 className="text-2xl font-serif font-black text-zinc-800">M&O Estilistas</h1>
+                    <h1 className="text-2xl font-serif font-black text-zinc-800">Peluquería M&O</h1>
                     <p className="text-zinc-500 text-sm mt-1">Panel de Administración</p>
                 </div>
 
@@ -101,7 +101,7 @@ export default function Login() {
                 </div>
 
                 <p className="text-center text-xs text-zinc-400 mt-6">
-                    Acceso exclusivo para administradores de M&O Estilistas
+                    Acceso exclusivo para administradores de Peluquería M&O
                 </p>
             </div>
         </div>

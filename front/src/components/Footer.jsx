@@ -10,7 +10,7 @@ export default function Footer({ dark = false }) {
                 {/* Marca */}
                 <div className="text-center md:text-left">
                     <h3 className={`text-xl font-serif font-black flex items-center justify-center md:justify-start gap-2 ${dark ? 'text-white' : 'text-zinc-900'}`}>
-                        <Scissors size={18} className="text-rose-500" /> M&O Estilistas
+                        <Scissors size={18} className="text-rose-500" /> Peluquería M&O
                     </h3>
                     <p className={`text-[11px] font-bold uppercase tracking-widest mt-1 ${dark ? 'text-zinc-500' : 'text-zinc-400'}`}>
                         Tu estilo, nuestra pasión
