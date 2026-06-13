@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Sparkles, RotateCcw, Download, ChevronRight, Camera, Wand2, Lightbulb } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { API } from '../utils/api';
 
 // Ejemplos de prompts para inspirar al usuario
@@ -410,6 +411,8 @@ export default function AIPreview() {
                     )}
                 </AnimatePresence>
             </div>
+
+            <Footer dark />
         </div>
     );
 }

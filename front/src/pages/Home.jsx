@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, ShoppingBag, Scissors, Star } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 // ── Flores SVG realistas ─────────────────────────────────────────────────────
 
@@ -341,6 +342,8 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }

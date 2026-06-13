@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import ServiceCard from '../components/ServiceCard';
 import BookingModal from '../components/BookingModal';
+import Footer from '../components/Footer';
 import { Calendar as CalendarIcon, Filter, Loader2 } from 'lucide-react';
 
 import { API } from '../utils/api';
@@ -127,6 +128,8 @@ export default function Appointments() {
                     onClose={() => setSelectedService(null)}
                 />
             )}
+
+            <Footer />
         </div>
     );
 }

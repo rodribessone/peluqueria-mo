@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API } from '../utils/api';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { ShoppingBag, Sparkles, Droplets, Wind, FlaskConical, Star, Tag, PackageX, ChevronRight } from 'lucide-react';
 
 const CATEGORIES = [
@@ -252,6 +253,8 @@ export default function Store() {
                     display: inline-flex;
                 }
             `}</style>
+
+            <Footer />
         </div>
     );
 }
