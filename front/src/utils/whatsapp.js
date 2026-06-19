@@ -22,6 +22,12 @@ export function clientWhatsAppUrl(booking) {
             weekday: 'long', day: 'numeric', month: 'long'
         })
         : '';
-    const msg = `¡Hola ${booking.clientName}! 💇 Te confirmo tu turno de *${booking.serviceName}* en Peluquería M&O:\n\n📅 ${fecha}\n⏰ ${booking.time} hs\n\nSi surge algún problema o necesitás cancelar, avisame por acá con tiempo. ¡Te espero!`;
+    const msg =
+        `¡Hola ${booking.clientName}! 💇 Te confirmo tu turno de *${booking.serviceName}* en Peluquería M&O:\n\n` +
+        `📅 ${fecha}\n⏰ ${booking.time} hs\n\n` +
+        `📌 *Tené en cuenta:*\n` +
+        `• Si necesitás cancelar o reprogramar, avisame con al menos *12 horas de anticipación*. De lo contrario, se cobrará el *50% del valor del servicio*.\n` +
+        `• Hay una tolerancia de *15 minutos* desde la hora del turno. Pasado ese tiempo, el turno se da por cancelado para poder atender a la siguiente clienta.\n\n` +
+        `¡Te espero! 😊`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 }
