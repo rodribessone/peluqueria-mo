@@ -212,6 +212,7 @@ export default function BookingModal({ service, onClose }) {
     const [date, setDate] = useState(null);
     const [time, setTime] = useState(null);
     const [customDuration, setCustomDuration] = useState(60);
+    const [fullDay, setFullDay] = useState(false); // bloquear el día entero (ej: viaje)
     const [formData, setFormData] = useState({ name: '', phone: '' });
     const [slots, setSlots] = useState([]);
     const [loadingSlots, setLoadingSlots] = useState(false);
@@ -222,7 +223,9 @@ export default function BookingModal({ service, onClose }) {
     const [confirmedBooking, setConfirmedBooking] = useState(null);
 
     const isBlocking = service.id === 999;
-    const duration = isBlocking ? parseInt(customDuration) : service.duration;
+    // Minutos entre apertura y cierre — duración de un bloqueo de día completo
+    const fullDayMin = Math.max(0, timeToMinutes(siteSettings.closeTime) - timeToMinutes(siteSettings.openTime));
+    const duration = isBlocking ? (fullDay ? fullDayMin : parseInt(customDuration)) : service.duration;
 
     // Cargamos settings primero — los demás useEffects esperan a que estén listos
     const [settingsLoaded, setSettingsLoaded] = useState(false);
@@ -314,14 +317,16 @@ export default function BookingModal({ service, onClose }) {
         const mo = String(date.getMonth() + 1).padStart(2, '0');
         const dy = String(date.getDate()).padStart(2, '0');
         const dateStr = `${y}-${mo}-${dy}`;
-        const finalDuration = isBlocking ? parseInt(customDuration) : service.duration;
-        const endTime = addMinutesToTime(time, finalDuration);
+        const finalDuration = isBlocking ? duration : service.duration;
+        // En un bloqueo de día completo arrancamos en el horario de apertura
+        const startSlot = (isBlocking && fullDay) ? siteSettings.openTime : time;
+        const endTime = addMinutesToTime(startSlot, finalDuration);
         const bookingData = {
             clientName: isBlocking ? (formData.name || 'Administración') : formData.name,
             clientPhone: isBlocking ? '0000000000' : formData.phone,
             clientEmail: '', // sin email — la confirmación va por WhatsApp desde el panel de admin
             service: { ...service, duration: finalDuration },
-            dateStr, date, time, endTime,
+            dateStr, date, time: startSlot, endTime,
             status: isBlocking ? 'blocked' : 'confirmed'
         };
         try {
@@ -342,7 +347,7 @@ export default function BookingModal({ service, onClose }) {
                     clientPhone: bookingData.clientPhone,
                     serviceName: service.title,
                     date,
-                    time,
+                    time: startSlot,
                     endTime,
                     salonWhatsapp: siteSettings.salonWhatsapp || '5492337403819',
                 });
@@ -358,6 +363,9 @@ export default function BookingModal({ service, onClose }) {
     };
 
     const endTimePreview = time ? addMinutesToTime(time, duration) : null;
+    // Inicio/fin a mostrar en el resumen — en bloqueo de día completo van apertura→cierre
+    const displayStart = (isBlocking && fullDay) ? siteSettings.openTime : time;
+    const displayEnd = (isBlocking && fullDay) ? siteSettings.closeTime : endTimePreview;
     const isSuccess = step === 'success' || step === 'blockSuccess';
 
     return (
@@ -450,6 +458,25 @@ export default function BookingModal({ service, onClose }) {
                                         </div>
 
                                         {isBlocking && (
+                                            <button type="button" onClick={() => { setFullDay(v => !v); setTime(null); }}
+                                                className={`w-full flex items-center justify-between gap-2 px-4 py-3 rounded-xl border text-sm font-bold transition-all ${fullDay ? 'bg-zinc-800 text-white border-zinc-800' : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'}`}>
+                                                <span className="flex items-center gap-2">
+                                                    <Calendar size={16} /> Bloquear día completo
+                                                </span>
+                                                <span className={`text-[11px] px-2 py-0.5 rounded-full ${fullDay ? 'bg-white/20' : 'bg-zinc-100 text-zinc-400'}`}>
+                                                    {fullDay ? 'ACTIVADO' : 'Apagado'}
+                                                </span>
+                                            </button>
+                                        )}
+
+                                        {isBlocking && fullDay && (
+                                            <div className="flex items-center gap-3 p-4 rounded-xl border bg-zinc-50 border-zinc-200 text-zinc-700 text-sm font-medium">
+                                                <AlertCircle size={18} className="shrink-0 text-zinc-500" />
+                                                <span>Se bloqueará <strong>todo el día</strong>, de <strong>{siteSettings.openTime}</strong> a <strong>{siteSettings.closeTime}</strong> hs. No se podrán reservar turnos esa jornada.</span>
+                                            </div>
+                                        )}
+
+                                        {isBlocking && !fullDay && (
                                             <div className="space-y-2 pb-4 border-b border-zinc-100">
                                                 <p className="text-sm font-bold text-zinc-700">Duración del Bloqueo</p>
                                                 <div className="flex flex-wrap gap-2">
@@ -468,6 +495,7 @@ export default function BookingModal({ service, onClose }) {
                                             </div>
                                         )}
 
+                                        {!fullDay && <>
                                         {loadingSlots ? (
                                             <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-400" /></div>
                                         ) : (
@@ -502,6 +530,7 @@ export default function BookingModal({ service, onClose }) {
                                             <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-zinc-100 inline-block" /> Ocupado</span>
                                             <span className="flex items-center gap-1"><span className={`w-3 h-3 rounded ${isBlocking ? 'bg-zinc-800' : 'bg-rose-500'} inline-block`} /> Elegido</span>
                                         </div>
+                                        </>}
                                     </motion.div>
                                 )}
 
@@ -532,9 +561,9 @@ export default function BookingModal({ service, onClose }) {
                                             <div className={`p-4 rounded-xl text-sm space-y-1.5 border ${isBlocking ? 'bg-zinc-50 border-zinc-200 text-zinc-600' : 'bg-rose-50 border-rose-100 text-zinc-600'}`}>
                                                 <p><strong>Servicio:</strong> {service.title}</p>
                                                 <p><strong>Fecha:</strong> {date?.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
-                                                <p><strong>Inicio:</strong> {time}</p>
-                                                <p><strong>Fin:</strong> <span className={`font-semibold ${isBlocking ? 'text-zinc-700' : 'text-rose-600'}`}>{endTimePreview}</span></p>
-                                                <p><strong>Duración:</strong> {duration} min</p>
+                                                <p><strong>Inicio:</strong> {displayStart}</p>
+                                                <p><strong>Fin:</strong> <span className={`font-semibold ${isBlocking ? 'text-zinc-700' : 'text-rose-600'}`}>{displayEnd}</span></p>
+                                                <p><strong>Duración:</strong> {isBlocking && fullDay ? 'Día completo' : `${duration} min`}</p>
                                             </div>
                                         </form>
                                     </motion.div>
@@ -550,7 +579,7 @@ export default function BookingModal({ service, onClose }) {
                                     : <div />
                                 }
                                 {step < 3 ? (
-                                    <button onClick={handleNext} disabled={step === 2 && !time}
+                                    <button onClick={handleNext} disabled={step === 2 && !time && !fullDay}
                                         className={`font-bold py-2.5 px-6 rounded-lg transition-all flex items-center gap-2 shadow-lg disabled:opacity-50 ${isBlocking ? 'bg-zinc-800 hover:bg-zinc-900 text-white' : 'bg-zinc-900 hover:bg-zinc-800 text-white'}`}>
                                         Siguiente <ChevronRight size={16} />
                                     </button>
